@@ -203,11 +203,20 @@ class Shop {
       }
 
       if (!this.itemInStock() && this.isGeneralStore()) {
-        this.shop.push({
-          id: this.itemId,
-          qty: 1,
-          slot: UI.getOpenSlot(this.shop),
-        });
+        // check if item already is in the inventory with 0 value
+        // find the items index
+        const itemIndex = this.shop.map(item => item.id).indexOf(this.itemId);
+        // if item is in the shop's inventory increment the items quantity
+        if (itemIndex !== -1) {
+          this.shop[itemIndex].qty += this.quantityToSell;
+        // if item is not in the the shop's inventory find the next available slot
+        } else {
+          this.shop.push({
+            id: this.itemId,
+            qty: 1,
+            slot: UI.getOpenSlot(this.shop),
+          });
+        }
       }
 
       // Remove item from inventory
